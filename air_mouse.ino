@@ -1,11 +1,16 @@
 int fanPin = 3;
 int inPin = 7;
-int fanstate = 0;
-int buttoncurrentstate = 0;
-int buttonprevstate = LOW;
+int fanState = 0;
+int buttonCurrentState = 0;
+int buttonPrevState = LOW;
 int tresshold = 0;
-int waterlevel = A1;
+int waterLevel = A1;
 int waterSensor = 0;
+int redPin=4;
+int greenPin=5;
+int bluePin=6;
+void setUpFan();
+
 
 
 
@@ -13,11 +18,15 @@ void setup() {
   pinMode(inPin, INPUT_PULLUP);
   pinMode(fanPin, OUTPUT);
   Serial.begin(9600);
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
 
 }
 
-void setUpFan() {
+/*Turns on the fan*/
 
+void setUpFan() {
   digitalWrite(fanPin, HIGH);
   //delay(5000);
   //digitalWrite(fanPin, LOW);
@@ -40,22 +49,29 @@ void loop() {
   buttonprevstate = buttoncurrentstate;
   buttoncurrentstate = digitalRead(inPin);
   waterlevel = analogRead(A1);
- // Serial.println(waterSensor);
+  // Serial.println(waterSensor);
+
+  /*Checks button state*/
 
   if (buttoncurrentstate == LOW && buttonprevstate == HIGH) {
     fanstate++;
-//    Serial.println((int)fanstate);
+    //    Serial.println((int)fanstate);
   }
+
+  /*Switches working modes*/
 
   Serial.println((int)fanstate);
   switch (fanstate) {
     case 0 :
       digitalWrite(fanPin, LOW);
+      
       break;
     case 1 :
       setUpFan();
+      setColor(15, 255, 79);
       break;//digitalWrite(fanPin, LOW);
     case 2 :
+      setColor(109, 43, 175);
       //Serial.println(tresshold);
       if (waterlevel > tresshold)
         setUpFan();
